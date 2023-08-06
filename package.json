@@ -1,0 +1,25 @@
+{
+  "name": "@deathlybower959/asciiprogress",
+  "version": "1.0.0",
+  "description": "ASCII progress bars in the terminal",
+  "main": "lib/index.js",
+  "types": "lib",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeathlyBower959/asciiprogress.git"
+  },
+  "homepage": "https://github.com/DeathlyBower959/asciiprogress#readme",
+  "bugs": {
+    "url": "https://github.com/DeathlyBower959/asciiprogress/issues"
+  },
+  "keywords": [],
+  "author": "DeathlyBower959",
+  "license": "GNU GPLv3",
+  "private": false,
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  }
+}
