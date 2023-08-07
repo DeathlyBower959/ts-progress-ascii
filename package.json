@@ -16,7 +16,16 @@
   "bugs": {
     "url": "https://github.com/DeathlyBower959/ts-progress-ascii/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "ascii",
+    "cli",
+    "node",
+    "progress",
+    "progressbar",
+    "typescript",
+    "terminal",
+    "utility"
+  ],
   "author": "DeathlyBower959",
   "license": "MIT",
   "private": false,
