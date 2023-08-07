@@ -8,7 +8,8 @@
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "lint": "tsc",
-    "dev": "nodemon --exec \"node --nolazy -r ts-node/register/transpile-only\" src/examples/index.ts"
+    "dev": "nodemon --exec \"node --nolazy -r ts-node/register/transpile-only\" src/examples/index.ts",
+    "release": "yarn run build && changeset publish"
   },
   "repository": {
     "type": "git",
