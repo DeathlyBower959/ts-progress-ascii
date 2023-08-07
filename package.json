@@ -18,7 +18,7 @@
   },
   "keywords": [],
   "author": "DeathlyBower959",
-  "license": "GNU GPLv3",
+  "license": "MIT",
   "private": false,
   "devDependencies": {
     "@types/node": "^20.4.8",
