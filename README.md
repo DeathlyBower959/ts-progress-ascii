@@ -1,1 +1,1 @@
-# Progress
+# ascii-progress-ts

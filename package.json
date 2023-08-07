@@ -1,25 +1,35 @@
 {
-  "name": "@deathlybower959/asciiprogress",
+  "name": "ts-progress-ascii",
   "version": "1.0.0",
   "description": "ASCII progress bars in the terminal",
   "main": "lib/index.js",
   "types": "lib",
   "scripts": {
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "dev": "nodemon --exec \"node --nolazy -r ts-node/register/transpile-only\" src/test/index.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DeathlyBower959/asciiprogress.git"
+    "url": "git+https://github.com/DeathlyBower959/ts-progress-ascii.git"
   },
-  "homepage": "https://github.com/DeathlyBower959/asciiprogress#readme",
+  "homepage": "https://github.com/DeathlyBower959/ts-progress-ascii#readme",
   "bugs": {
-    "url": "https://github.com/DeathlyBower959/asciiprogress/issues"
+    "url": "https://github.com/DeathlyBower959/ts-progress-ascii/issues"
   },
   "keywords": [],
   "author": "DeathlyBower959",
   "license": "GNU GPLv3",
   "private": false,
   "devDependencies": {
+    "@types/node": "^20.4.8",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@total-typescript/ts-reset": "^0.4.2",
+    "@types/ansi": "^0.3.3",
+    "ansi": "^0.3.1",
+    "get-cursor-position": "^2.0.0"
   }
 }

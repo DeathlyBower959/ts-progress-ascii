@@ -1,3 +1,3 @@
-export function isEven(num: number) {
-  return num % 2 === 0;
-}
+export * from './progress';
+export { ProgressStyles } from './styles/progress';
+export { LoaderStyles } from './styles/loaders';
