@@ -23,7 +23,6 @@ jobs:
         with:
           node-version: 16.x
           cache: 'yarn'
-          registry-url: 'https://registry.npmjs.org'
 
       - run: yarn install --frozen-lockfile
       - name: Create Release Pull Request or Publish
