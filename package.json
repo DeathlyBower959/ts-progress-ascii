@@ -2,10 +2,12 @@
   "name": "ts-progress-ascii",
   "version": "1.0.0",
   "description": "ASCII progress bars in the terminal",
-  "main": "lib/index.js",
-  "types": "lib",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p .",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "lint": "tsc",
     "dev": "nodemon --exec \"node --nolazy -r ts-node/register/transpile-only\" src/test/index.ts"
   },
   "repository": {
@@ -30,9 +32,11 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
+    "@changesets/cli": "^2.26.2",
     "@types/node": "^20.4.8",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
+    "tsup": "^7.2.0",
     "typescript": "^5.1.6"
   },
   "dependencies": {

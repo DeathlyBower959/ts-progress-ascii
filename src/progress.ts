@@ -25,7 +25,6 @@ export class Progress {
   }
 
   private progress_chars: IProgress;
-  private encapsulating_chars: [string, string];
   private spinner_frames: IFrames;
   private frames_idx = 0;
 
@@ -39,13 +38,12 @@ export class Progress {
   constructor(
     total: number,
     progressChars: IProgress = ProgressStyles.HASH_HYPHEN,
-    encapsulatingChars: [string, string] = ['[', ']'],
     frames: IFrames = LoaderStyles.DOTS,
+    template: '',
     width: IWidth = 'auto'
   ) {
     this.total = Math.max(total, 0);
     this.progress_chars = progressChars;
-    this.encapsulating_chars = encapsulatingChars;
     this.spinner_frames = frames;
     this._width = width === 'auto' ? width : Math.round(width);
 
@@ -78,27 +76,23 @@ export class Progress {
 
   // Private
   public tick(): boolean {
-    const width =
-      this.width -
-      this.encapsulating_chars[0].length -
-      this.encapsulating_chars[1].length -
-      3;
-
     const SPINNER = this.spinner_frames[this.frames_idx];
     this.frames_idx = (this.frames_idx + 1) % this.spinner_frames.length;
 
     const left = Math.round(
-      (this.total <= 0 ? 1 : this.completed / this.total) * width
+      (this.total <= 0 ? 1 : this.completed / this.total) * this.width
     );
     const leftChars = this.progress_chars[0].repeat(left);
-    const rightChars = this.progress_chars[1].repeat(Math.max(width - left, 0));
+    const rightChars = this.progress_chars[1].repeat(
+      Math.max(this.width - left, 0)
+    );
     const BAR = `${leftChars}${rightChars}`;
 
     const DATA = `${Math.round(
       (this.total <= 0 ? 1 : this.completed / this.total) * 100
     )}% - ${this.completed}/${this.total}`;
 
-    const progress = `${SPINNER} ${this.encapsulating_chars[0]}${BAR}${this.encapsulating_chars[1]} | ${DATA}`;
+    const progress = `${SPINNER} [${BAR}] | ${DATA}`;
 
     // if (typeof stdout.clearLine !== 'function') {
     // console.log(progress); // Same line will not be printed
