@@ -10,7 +10,7 @@
         "--exec",
         "\"node --nolazy -r ts-node/register/transpile-only\""
       ],
-      "args": ["src/test/index.ts"],
+      "args": ["src/examples/index.ts"],
       // "preLaunchTask": "npm:dev",
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
