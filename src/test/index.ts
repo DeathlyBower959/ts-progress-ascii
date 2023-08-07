@@ -1,6 +1,6 @@
-import { Progress, ProgressStyles } from '../index';
+import { LoaderStyles, Progress, ProgressStyles } from '../index';
 
-const progress = new Progress(20, ProgressStyles.SQUARE_HYPHEN);
+const progress = new Progress(500);
 
 progress.addListener(() => console.log(''));
 const interval = setInterval(() => {

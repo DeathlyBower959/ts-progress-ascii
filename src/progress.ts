@@ -1,9 +1,14 @@
 import ansi, { Cursor } from 'ansi';
+import getCursorPosition from 'get-cursor-position';
 import { stdout } from 'process';
 
-import { LoaderStyles, ProgressStyles } from './';
+import { LoaderStyles, ProgressStyles, TemplateStyles } from './';
 import { IFrames } from './styles/loaders';
 import { IProgress } from './styles/progress';
+
+// TODO: Work on this later with customizable
+// function test(str: `${'%foo%' | '%bar%'}${string}`) {}
+// test('');
 
 type IWidth = number | 'auto';
 export class Progress {
@@ -14,21 +19,25 @@ export class Progress {
     return this.completed === this.total;
   }
 
-  private cursor: Cursor;
+  cursor: Cursor;
 
-  private _width: IWidth;
-  private get width() {
+  _width: IWidth;
+  get width() {
     // stdout.columns doesnt get "live" width, so look into a solution for that
     return this._width === 'auto'
       ? Math.min(Math.max(stdout.columns - 30, 25), 70)
       : this._width;
   }
 
-  private progress_chars: IProgress;
-  private spinner_frames: IFrames;
-  private frames_idx = 0;
+  progress_chars: IProgress;
+  spinner_frames: IFrames;
+  frames_idx = 0;
 
-  private callbacks: (() => void)[] = [];
+  template: string;
+
+  callbacks: (() => void)[] = [];
+
+  original_position: { row: number; col: number };
 
   // Constructor
   /**
@@ -37,17 +46,19 @@ export class Progress {
    */
   constructor(
     total: number,
-    progressChars: IProgress = ProgressStyles.HASH_HYPHEN,
-    frames: IFrames = LoaderStyles.DOTS,
-    template: '',
+    progressChars: IProgress = ProgressStyles.SLANT_EMPTYSLANT,
+    frames: IFrames = LoaderStyles.BLINK,
+    template: string = TemplateStyles.HELLO_KITTY_GIANNA,
     width: IWidth = 'auto'
   ) {
     this.total = Math.max(total, 0);
     this.progress_chars = progressChars;
     this.spinner_frames = frames;
+    this.template = template;
     this._width = width === 'auto' ? width : Math.round(width);
 
     this.cursor = ansi(stdout).hide();
+    this.original_position = getCursorPosition.sync();
   }
 
   // Public
@@ -74,7 +85,6 @@ export class Progress {
     }
   }
 
-  // Private
   public tick(): boolean {
     const SPINNER = this.spinner_frames[this.frames_idx];
     this.frames_idx = (this.frames_idx + 1) % this.spinner_frames.length;
@@ -88,17 +98,62 @@ export class Progress {
     );
     const BAR = `${leftChars}${rightChars}`;
 
-    const DATA = `${Math.round(
+    const PERCENTAGE = `${Math.round(
       (this.total <= 0 ? 1 : this.completed / this.total) * 100
-    )}% - ${this.completed}/${this.total}`;
+    )}`;
 
-    const progress = `${SPINNER} [${BAR}] | ${DATA}`;
+    let progress = this.template;
 
-    // if (typeof stdout.clearLine !== 'function') {
-    // console.log(progress); // Same line will not be printed
-    // } else {
-    this.cursor.horizontalAbsolute().write(`\r${progress}`);
-    // }
+    const obj_template: Record<string, string> = {
+      '@spinner': SPINNER || '',
+      '@bar': BAR,
+      '@percentage': PERCENTAGE,
+      '@completed': this.completed.toString(),
+      '@total': this.total.toString(),
+    };
+    type IProgressKeys = keyof typeof obj_template;
+
+    this.cursor.horizontalAbsolute();
+
+    const chars = this.template.split('');
+
+    for (let idx = 0; idx < chars.length; idx++) {
+      if (chars[idx] === '@') {
+        const data = chars
+          .join('')
+          .substring(idx)
+          .match(/(@[A-Za-z]+#[A-z,0-9]{6})|(@[A-Za-z]+)/);
+        if (!data) continue;
+
+        idx += data[0].length - 1;
+
+        const split = data[0].split('#');
+        const key = split[0];
+        const hex = split[1];
+
+        if (hex) {
+          this.cursor.hex(hex).write(obj_template[key as IProgressKeys] ?? '');
+        } else {
+          this.cursor.write(obj_template[key as IProgressKeys] ?? '');
+        }
+      } else if (chars[idx] === '(') {
+        const data = chars
+          .join('')
+          .substring(idx)
+          .match(/\(#[A-z,0-9]{6}\)/);
+        if (!data) continue;
+
+        idx += data[0].length;
+
+        // write colored char
+        this.cursor
+          .hex(data[0].substring(1, data[0].length - 1))
+          .write(chars[idx] || '');
+      } else {
+        // write normal char
+        this.cursor.write(chars[idx] || '');
+      }
+    }
 
     if (this.completed >= this.total) {
       this.cursor.show();
@@ -108,6 +163,8 @@ export class Progress {
 
     return false;
   }
+
+  // Private
 }
 
 export class MultiProgress {
