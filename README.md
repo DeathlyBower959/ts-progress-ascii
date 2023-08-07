@@ -1,4 +1,4 @@
-# ascii-progress-ts
+# ts-progress-ascii
 
 ## Presets
 

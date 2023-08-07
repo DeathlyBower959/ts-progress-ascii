@@ -177,17 +177,21 @@ export class Progress {
     }
 
     if (this.completed >= this.total) {
-      this.cursor.write('\n');
-      this.cursor.show();
-      Progress.instances.splice(Progress.instances.indexOf(this), 1);
-      if (Progress.instances.length === 0) {
-        clearInterval(Progress.renderLoop);
-      }
-      this.callbacks.forEach(x => x());
+      this.terminate();
       return true;
     }
 
     return false;
+  }
+
+  public terminate() {
+    this.cursor.write('\n');
+    this.cursor.show();
+    Progress.instances.splice(Progress.instances.indexOf(this), 1);
+    if (Progress.instances.length === 0) {
+      clearInterval(Progress.renderLoop);
+    }
+    this.callbacks.forEach(x => x());
   }
 
   // Private
