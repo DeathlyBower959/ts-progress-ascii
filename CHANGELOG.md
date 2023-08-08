@@ -1,5 +1,11 @@
 # ts-progress-ascii
 
+## 3.1.1
+
+### Patch Changes
+
+- faf4282: Terminal all method
+
 ## 3.1.0
 
 ### Minor Changes
