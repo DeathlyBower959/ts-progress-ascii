@@ -17,6 +17,12 @@ export class Progress {
   static instances: Progress[] = [];
   static renderLoop: NodeJS.Timer;
 
+  public static terminateAll() {
+    this.instances.map(x => x.terminate());
+    this.instances = [];
+    clearInterval(this.renderLoop);
+  }
+
   // Properties
   public completed = 0;
   public total: number;
